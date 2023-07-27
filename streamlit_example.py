@@ -27,8 +27,9 @@ st.write('Filtered Data:')
 st.write(filtered_data)
 
 # Create a bar chart using matplotlib and display it using Streamlit
+# Plot the data as a line chart
 fig, ax = plt.subplots()
-ax.bar(filtered_data['year'], filtered_data['population'])
+ax.plot(filtered_data['year'], filtered_data['population'], marker='o', linestyle='-')
 ax.set_xlabel('Year')
 ax.set_ylabel('Population')
 ax.set_title(f'{selected_state} - {population_type.capitalize()} Population from 1990 to 2012')
