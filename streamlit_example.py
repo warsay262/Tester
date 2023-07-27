@@ -19,7 +19,7 @@ def main():
     years = df['year'].unique()
 
     # Add dropdown widgets for state, year, and population type
-    selected_state = st.selectbox('Select State:', states)
+    selected_state = st.selectbox('Select State/Region:', states)
     selected_year = st.selectbox('Select Year:', years)
     selected_population_type = st.selectbox('Select Population Type:', ['total', 'under18'])
 
