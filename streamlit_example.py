@@ -11,7 +11,7 @@ def load_data():
 df = load_data()
 
 # Add a title to the app
-st.title('Interactive Population Dashboard')
+st.title('Interactive US Population Dashboard')
 
 # Create a dropdown for state/region selection
 selected_state = st.selectbox('Select a State/Region', df['state/region'].unique())
