@@ -22,6 +22,10 @@ population_type = st.radio('Population Type', ['total', 'under18'])
 # Filter the data based on user input
 filtered_data = df[(df['state/region'] == selected_state) & (df['ages'] == population_type)]
 
+# Display the filtered data as a table
+st.write('Filtered Data:')
+st.write(filtered_data)
+
 # Plot the data as a line chart
 fig, ax = plt.subplots()
 ax.plot(filtered_data['year'], filtered_data['population'], marker='o', linestyle='-')
