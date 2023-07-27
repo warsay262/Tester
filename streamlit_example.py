@@ -2,28 +2,27 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def load_data():
-    # Load the dataset from the CSV file
-    data = pd.read_csv("state-population.csv")
-    return data
+# Read the dataset
+df = pd.read_csv('state-population.csv')
 
-def main():
-    # Add a title to the app
-    st.title('USA Total Population by Year')
+# Create a Streamlit app
+st.title('US State Population Dashboard')
 
-    # Load the data from the CSV file
-    df = load_data()
+# Sidebar widgets for user interaction
+state = st.sidebar.selectbox('Select a state/region:', df['state/region'].unique())
+year = st.sidebar.selectbox('Select a year:', df['year'].unique())
+population_type = st.sidebar.radio('Choose population type:', ['total', 'under18'])
 
-    # Filter the dataset for the 'total' rows and the 'USA' state/region
-    df_usa = df[(df['state/region'] == 'USA') & (df['ages'] == 'total')]
+# Filter the data based on user selection
+filtered_data = df[(df['state/region'] == state) & (df['year'] == year) & (df['ages'] == population_type)]
 
-    # Create a bar chart using matplotlib and display it using Streamlit
-    fig, ax = plt.subplots()
-    ax.bar(df_usa['year'], df_usa['population'])
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Total Population')
-    ax.set_title('USA Total Population by Year')
-    st.pyplot(fig)
+# Display the selected data in a table
+st.table(filtered_data)
 
-if __name__ == '__main__':
-    main()
+# Create and display the bar chart
+plt.figure(figsize=(10, 6))
+plt.bar(filtered_data['ages'], filtered_data['population'])
+plt.xlabel('Population Type')
+plt.ylabel('Population')
+plt.title(f'{population_type.capitalize()} Population in {state} ({year})')
+st.pyplot(plt)
