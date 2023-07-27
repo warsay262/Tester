@@ -2,24 +2,28 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+def load_data():
+    # Load the dataset from the CSV file
+    data = pd.read_csv("state-population.csv")
+    return data
+
 def main():
-    st.title('State Population Comparison')
-    st.sidebar.header('Select States/Regions')
+    # Add a title to the app
+    st.title('USA Total Population by Year')
 
     # Load the data from the CSV file
-    data = pd.read_csv('state-population.csv')
+    df = load_data()
 
-    # Get a list of unique states/regions from the 'state/region' column
-    states = data['state/region'].unique()
+    # Filter the dataset for the 'total' rows and the 'USA' state/region
+    df_usa = df[(df['state/region'] == 'USA') & (df['ages'] == 'total')]
 
-    # Allow users to select up to 5 states/regions using checkboxes in the sidebar
-    selected_states = st.sidebar.multiselect('Select States/Regions', states, default=states[:5])
-
-    # Filter the data based on the selected states/regions
-    filtered_data = data[data['state/region'].isin(selected_states)]
-
-    # Create a bar chart to compare the populations
-    st.bar_chart(filtered_data.pivot_table(index='year', columns='state/region', values='population'))
+    # Create a bar chart using matplotlib and display it using Streamlit
+    fig, ax = plt.subplots()
+    ax.bar(df_usa['year'], df_usa['population'])
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Total Population')
+    ax.set_title('USA Total Population by Year')
+    st.pyplot(fig)
 
 if __name__ == '__main__':
     main()
