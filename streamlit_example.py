@@ -2,41 +2,25 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-def load_data():
-    # Load the dataset from the CSV file
-    data = pd.read_csv("state-population.csv")
-    return data
+# Read the CSV file
+data = pd.read_csv('state-population.csv')
 
 def main():
-    # Add a title to the app
-    st.title('USA Total Population by Year')
+    st.title('State Population Analysis')
+    
+    # Display the loaded data (optional)
+    st.write("Data Preview:")
+    st.dataframe(data)
 
-    # Load the data from the CSV file
-    df = load_data()
+    # Filter the data based on user selection (total or under18 population)
+    population_type = st.radio('Select Population Type:', ['total', 'under18'])
+    filtered_data = data[data['ages'] == population_type]
 
-    # Get unique states and years for the dropdowns
-    states = df['state/region'].unique()
-    years = df['year'].unique()
+    # Group the data by state/region and calculate the total population for each
+    state_population = filtered_data.groupby('state/region')['population'].sum()
 
-    # Add dropdown widgets for state, year, and population type
-    selected_state = st.selectbox('Select State:', states)
-    selected_year = st.selectbox('Select Year:', years)
-    selected_population_type = st.selectbox('Select Population Type:', ['total', 'under18'])
+    # Display the bar chart
+    st.bar_chart(state_population)
 
-    # Filter the dataset based on user selections
-    df_filtered = df[(df['state/region'] == selected_state) & (df['year'] == selected_year) & (df['ages'] == selected_population_type)]
-
-    # Display the filtered data as a table
-    st.write('Filtered Data:')
-    st.write(df_filtered)
-
-    # Create a bar chart using matplotlib and display it using Streamlit
-    fig, ax = plt.subplots()
-    ax.bar(df_filtered['ages'], df_filtered['population'])
-    ax.set_xlabel('Population Type')
-    ax.set_ylabel('Population')
-    ax.set_title(f'{selected_state} Population - Year {selected_year}')
-    st.pyplot(fig)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
