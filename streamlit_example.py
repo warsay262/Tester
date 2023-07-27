@@ -2,25 +2,24 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Read the CSV file
-data = pd.read_csv('state-population.csv')
-
 def main():
-    st.title('State Population Analysis')
-    
-    # Display the loaded data (optional)
-    st.write("Data Preview:")
-    st.dataframe(data)
+    st.title('State Population Comparison')
+    st.sidebar.header('Select States/Regions')
 
-    # Filter the data based on user selection (total or under18 population)
-    population_type = st.radio('Select Population Type:', ['total', 'under18'])
-    filtered_data = data[data['ages'] == population_type]
+    # Load the data from the CSV file
+    data = pd.read_csv('state-population.csv')
 
-    # Group the data by state/region and calculate the total population for each
-    state_population = filtered_data.groupby('state/region')['population'].sum()
+    # Get a list of unique states/regions from the 'state/region' column
+    states = data['state/region'].unique()
 
-    # Display the bar chart
-    st.bar_chart(state_population)
+    # Allow users to select up to 5 states/regions using checkboxes in the sidebar
+    selected_states = st.sidebar.multiselect('Select States/Regions', states, default=states[:5])
 
-if __name__ == "__main__":
+    # Filter the data based on the selected states/regions
+    filtered_data = data[data['state/region'].isin(selected_states)]
+
+    # Create a bar chart to compare the populations
+    st.bar_chart(filtered_data.pivot_table(index='year', columns='state/region', values='population'))
+
+if __name__ == '__main__':
     main()
